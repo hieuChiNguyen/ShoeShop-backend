@@ -3,6 +3,8 @@ import authController from '../controllers/authController';
 import userController from '../controllers/userController';
 import productController from '../controllers/productController';
 import cartController from '../controllers/cartController';
+import authJWT from '../middleware/authJWT';
+
 const path = require('path');
 const multer = require('multer');
 
@@ -20,9 +22,14 @@ const upload = multer({ storage: storage });
 let router = express.Router();
 
 let initWebRouters = (app) => {
+    // Check middleware
+    router.all('*', authJWT.verifyToken, authJWT.verifyTokenAndAdminAuth);
+
     // Auth
     router.post('/api/signup', authController.handleSignUp);
     router.post('/api/signin', authController.handleSignIn);
+    router.post('/api/signout', authController.handleSignOut);
+    router.post('/auth/refresh', authController.handleRefreshToken);
 
     // Users
     router.post('/api/create_new_user', userController.handleCreateNewUser);
@@ -40,7 +47,7 @@ let initWebRouters = (app) => {
     router.delete('/api/delete_product', productController.handleDeleteProduct);
     router.put('/api/edit_product', productController.handleEditProduct);
 
-    // Cart
+    // Carts
     router.post('/api/create_new_cart_item', cartController.handleCreateNewCartItem);
     router.get('/api/get_cart/:userId', cartController.handleGetCartByUserId);
     router.put('/api/update_cart', cartController.handleUpdateCart);

@@ -4,6 +4,7 @@ import userService from '../services/userService';
 // Admin
 let handleCreateNewUser = async (req, res) => {
     await User.sync();
+
     let information = await userService.createNewUserByAdmin(req.body);
     return res.status(200).json(information);
 };

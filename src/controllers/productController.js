@@ -7,13 +7,10 @@ let handlePostProduct = async (req, res) => {
     try {
         await Product.sync();
         let imagePath = await req.file.path;
-        // console.log('check file: ', imagePath);
         let productData = await productService.createNewProduct({
             ...req.body,
             image: imagePath
         });
-
-        // console.log('check product data: ', productData);
 
         return res.status(200).json({
             errCode: productData.errCode,

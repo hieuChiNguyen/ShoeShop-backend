@@ -1,9 +1,11 @@
 import User from '../models/User';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const { Op } = require('sequelize');
 const salt = bcrypt.genSaltSync(10);
 
+// Encode raw password into hashed password
 let hashUserPassword = (password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -15,6 +17,7 @@ let hashUserPassword = (password) => {
     });
 };
 
+// check email is existed or not
 let checkUserEmail = (userEmail) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -32,6 +35,7 @@ let checkUserEmail = (userEmail) => {
     });
 };
 
+// check email or username or phone number is existed or not
 let checkExistInformation = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -53,6 +57,67 @@ let checkExistInformation = (data) => {
     });
 };
 
+// Generate Access Token
+let generateAccessToken = (user) => {
+    return jwt.sign(
+        {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            role: user.role
+        },
+        process.env.JWT_ACCESS_KEY,
+        { expiresIn: '60s' }
+    );
+};
+
+// Sign in as a customer
+let handleUserSignIn = (email, password) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let userData = {};
+            let isExist = await checkUserEmail(email);
+
+            if (isExist) {
+                // user exist
+                let user = await User.findOne({
+                    where: { email: email },
+                    attributes: ['email', 'role', 'password', 'username', 'id'],
+                    raw: true
+                });
+
+                if (user) {
+                    // compare password
+                    let checkPassword = bcrypt.compareSync(password, user.password);
+
+                    if (checkPassword) {
+                        // Access Token -> short-lived token
+                        const accessToken = generateAccessToken(user);
+
+                        userData.errCode = 0;
+                        userData.message = 'Sign in successfully !';
+                        delete user.password;
+                        userData.user = user;
+                        userData.user.accessToken = accessToken;
+                    } else {
+                        userData.errCode = 4;
+                        userData.message = 'Wrong Password !';
+                    }
+                }
+            } else {
+                //user not found
+                userData.errCode = 3;
+                userData.message = `This email is not existed. Try again !`;
+            }
+
+            resolve(userData);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+// return data of new customer account
 let createNewCustomer = (userData) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -100,48 +165,8 @@ let createNewCustomer = (userData) => {
     });
 };
 
-let handleUserSignIn = (email, password) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let userData = {};
-            let isExist = await checkUserEmail(email);
-
-            if (isExist) {
-                // user exist
-                let user = await User.findOne({
-                    where: { email: email },
-                    attributes: ['email', 'role', 'password', 'username', 'id'],
-                    raw: true
-                });
-
-                if (user) {
-                    // compare password
-                    let checkPassword = bcrypt.compareSync(password, user.password);
-
-                    if (checkPassword) {
-                        userData.errCode = 0;
-                        userData.message = 'done';
-                        delete user.password;
-                        userData.user = user;
-                    } else {
-                        userData.errCode = 3;
-                        userData.message = 'Wrong Password !';
-                    }
-                }
-            } else {
-                //user not found
-                userData.errCode = 2;
-                userData.message = `This email is not existed. Try again !`;
-            }
-
-            resolve(userData);
-        } catch (error) {
-            reject(error);
-        }
-    });
-};
-
 module.exports = {
     handleUserSignIn: handleUserSignIn,
-    createNewCustomer: createNewCustomer
+    createNewCustomer: createNewCustomer,
+    generateAccessToken: generateAccessToken
 };

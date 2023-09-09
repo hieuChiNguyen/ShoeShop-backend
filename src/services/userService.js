@@ -14,10 +14,27 @@ let hashUserPassword = (password) => {
     });
 };
 
+let checkUserEmail = (userEmail) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await User.findOne({
+                where: { email: userEmail }
+            });
+            if (user) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 let createNewUserByAdmin = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            // check email was already existed
+            // Check email was already existed
             let check = await checkUserEmail(data.email);
             if (check === true) {
                 resolve({
@@ -34,15 +51,16 @@ let createNewUserByAdmin = (data) => {
                     username: data.username,
                     phone: data.phone,
                     gender: data.gender,
-                    role: data.role
+                    role: 'Admin'
                 });
 
-                if (user)
+                if (user) {
                     resolve({
                         errCode: 0,
                         message: 'OK',
                         data: user
                     });
+                }
             }
         } catch (error) {
             reject(error);
@@ -61,7 +79,31 @@ let getAllUsers = (userId) => {
                         exclude: ['password']
                     }
                 });
+
+                // const { count, rows } = await User.findAndCountAll({ where: { role: 'Admin' } });
+                // // console.log('check count: ', count);
+                // if (count > 0) {
+                //     const roles = [
+                //         { url: '/signin', description: 'Customer signs in' },
+                //         { url: '/signup', description: 'Customer creates a new account' },
+                //         { url: '/admin', description: 'Admin page' },
+                //         { url: '/admin/manage_accounts', description: 'Manage all accounts' },
+                //         { url: '/admin/manage_products', description: 'Manage all products' },
+                //         { url: '/admin/manage_vouchers', description: 'manage all vouchers' },
+                //         { url: '/admin/post_products', description: 'Admin posts a new product to homepage' },
+                //         { url: '/products', description: 'Show all products' },
+                //         { url: '/profile', description: 'View customer profile' },
+                //         { url: '/cart', description: 'View customer cart' },
+                //         { url: '/male', description: 'Show all male products' },
+                //         { url: '/female', description: 'Show all female products' }
+                //     ];
+
+                //     await Role.bulkCreate(roles, { individualHooks: true }).then(() =>
+                //         console.log('Roles data have been saved')
+                //     );
+                // }
             }
+
             if (userId && userId !== 'ALL') {
                 users = await User.findOne({
                     where: { id: userId },

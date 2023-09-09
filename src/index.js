@@ -4,15 +4,19 @@ import viewEngine from './config/viewEngine';
 import initWebRoutes from './route/web';
 import sequelize from './config/connectDB';
 import cors from 'cors';
-
+import cookieParser from 'cookie-parser';
 require('dotenv').config();
 
 let app = express();
-app.use(cors({ origin: true }));
+app.use(cors({ origin: true, credentials: true }));
 
-//config app
+// config body parser
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+// config cookie parser
+app.use(cookieParser());
+
 viewEngine(app);
 initWebRoutes(app);
 

@@ -87,5 +87,9 @@ User.hasMany(Cart, { foreignKey: 'userId' });
 Cart.belongsTo(User, { foreignKey: 'userId' });
 Product.hasMany(Cart, { foreignKey: 'productId' });
 Cart.belongsTo(Product, { foreignKey: 'productId' });
+// User.hasMany(Role_User, { foreignKey: 'userRole' });
+// Role_User.belongsTo(User, { foreignKey: 'userRole', targetKey: 'role' });
+// Role.hasMany(Role_User, { foreignKey: 'roleId' });
+// Role_User.belongsTo(Role, { foreignKey: 'roleId' });
 
 module.exports = User;

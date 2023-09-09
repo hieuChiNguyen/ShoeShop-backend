@@ -50,7 +50,12 @@ let getCart = (_userId) => {
         try {
             let carts = await Cart.findAll({
                 where: { userId: _userId }
+                // include: { model: Product },
+                // raw: true,
+                // nest: true
             });
+
+            console.log('check carts: ', carts);
 
             let countItems = 0;
             carts.forEach((countItem) => {
@@ -75,10 +80,13 @@ let getCart = (_userId) => {
                 }
             }
 
+            let totalPrice = products.reduce((price, product) => price + product.price * product.countUniqueProduct, 0);
+
             resolve({
                 errCode: 0,
                 message: 'OK',
                 countItems: countItems,
+                totalPrice: totalPrice,
                 products: products
             });
         } catch (error) {
@@ -129,6 +137,7 @@ let deleteCartProduct = (cartId) => {
 
             resolve({
                 errCode: 0,
+                deleted: productCart,
                 message: 'Product cart is successfully deleted !'
             });
         } catch (error) {
