@@ -253,11 +253,11 @@ let getUserAvatar = (userId) => {
 };
 
 module.exports = {
-    createNewUserByAdmin: createNewUserByAdmin,
-    getAllUsers: getAllUsers,
-    getProfile: getProfile,
-    deleteUser: deleteUser,
-    editUserData: editUserData,
-    updateUserAvatar: updateUserAvatar,
-    getUserAvatar: getUserAvatar
+    createNewUserByAdmin,
+    getAllUsers,
+    getProfile,
+    deleteUser,
+    editUserData,
+    updateUserAvatar,
+    getUserAvatar
 };

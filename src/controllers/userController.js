@@ -77,11 +77,11 @@ let handleGetUserAvatar = async (req, res) => {
 };
 
 module.exports = {
-    handleCreateNewUser: handleCreateNewUser,
-    handleGetAllUsers: handleGetAllUsers,
-    handleGetProfile: handleGetProfile,
-    handleEditUser: handleEditUser,
-    handleDeleteUser: handleDeleteUser,
-    handleUpdateUserAvatar: handleUpdateUserAvatar,
-    handleGetUserAvatar: handleGetUserAvatar
+    handleCreateNewUser,
+    handleGetAllUsers,
+    handleGetProfile,
+    handleEditUser,
+    handleDeleteUser,
+    handleUpdateUserAvatar,
+    handleGetUserAvatar
 };

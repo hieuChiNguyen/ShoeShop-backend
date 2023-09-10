@@ -29,29 +29,23 @@ let handleGetCartByUserId = async (req, res) => {
     return res.status(200).json(cart);
 };
 
-let handleUpdateCart = async (req, res) => {
+let handleUpdateCartQuantity = async (req, res) => {
     try {
         let data = req.body;
-        let size = data.size;
-        if (!size) {
-            return res.status(400).json({
-                errCode: 2,
-                message: 'Missing size !'
-            });
-        }
+        console.log('check data update cart: ', data);
         let countUniqueProduct = data.countUniqueProduct;
         if (!countUniqueProduct) {
             return res.status(400).json({
                 errCode: 3,
-                message: 'Missing count !'
+                message: 'Missing quantity of product !'
             });
         }
-        let updatedCart = await cartService.updateCart(data);
+        let updatedCart = await cartService.updateCartQuantity(data);
         return res.status(200).json(updatedCart);
     } catch (error) {
         return res.status(400).json({
             errCode: 1,
-            message: 'Missing size or count parameter !'
+            message: 'Missing request parameter !'
         });
     }
 };
@@ -75,8 +69,8 @@ let handleDeleteCartProduct = async (req, res) => {
 };
 
 module.exports = {
-    handleCreateNewCartItem: handleCreateNewCartItem,
-    handleGetCartByUserId: handleGetCartByUserId,
-    handleUpdateCart: handleUpdateCart,
-    handleDeleteCartProduct: handleDeleteCartProduct
+    handleCreateNewCartItem,
+    handleGetCartByUserId,
+    handleUpdateCartQuantity,
+    handleDeleteCartProduct
 };

@@ -187,8 +187,8 @@ let editProductData = (data) => {
 };
 
 module.exports = {
-    createNewProduct: createNewProduct,
-    getProduct: getProduct,
-    deleteProduct: deleteProduct,
-    editProductData: editProductData
+    createNewProduct,
+    getProduct,
+    deleteProduct,
+    editProductData
 };

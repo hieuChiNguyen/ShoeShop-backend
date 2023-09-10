@@ -166,7 +166,7 @@ let createNewCustomer = (userData) => {
 };
 
 module.exports = {
-    handleUserSignIn: handleUserSignIn,
-    createNewCustomer: createNewCustomer,
-    generateAccessToken: generateAccessToken
+    handleUserSignIn,
+    createNewCustomer,
+    generateAccessToken
 };

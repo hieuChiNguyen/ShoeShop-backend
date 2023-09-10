@@ -18,7 +18,7 @@ let createNewCartItem = (data) => {
 
                 resolve({
                     errCode: 0,
-                    message: 'done',
+                    message: 'Create a new cart item successfully!',
                     data: cartItem
                 });
             } else {
@@ -35,7 +35,7 @@ let createNewCartItem = (data) => {
 
                 resolve({
                     errCode: 0,
-                    message: 'update sucessfully !',
+                    message: 'Update cart item successfully !',
                     data: updatedCart
                 });
             }
@@ -95,21 +95,26 @@ let getCart = (_userId) => {
     });
 };
 
-let updateCart = (data) => {
+let updateCartQuantity = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             let cart = await Cart.update(
-                { size: data.size, countUniqueProduct: data.count },
+                { countUniqueProduct: data.countUniqueProduct },
                 {
                     where: {
                         id: data.id
                     }
                 }
             );
+
+            let newCart = await Cart.findOne({
+                where: { id: data.id }
+            });
+
             resolve({
                 errCode: 0,
-                message: 'done',
-                data: cart
+                message: 'Update quantity item successfully !',
+                data: newCart
             });
         } catch (error) {
             reject(error);
@@ -147,8 +152,8 @@ let deleteCartProduct = (cartId) => {
 };
 
 module.exports = {
-    createNewCartItem: createNewCartItem,
-    getCart: getCart,
-    updateCart: updateCart,
-    deleteCartProduct: deleteCartProduct
+    createNewCartItem,
+    getCart,
+    updateCartQuantity,
+    deleteCartProduct
 };

@@ -71,9 +71,9 @@ let handleEditProduct = async (req, res) => {
 };
 
 module.exports = {
-    handlePostProduct: handlePostProduct,
-    handleGetProduct: handleGetProduct,
-    handleDeleteProduct: handleDeleteProduct,
-    getProductImage: getProductImage,
-    handleEditProduct: handleEditProduct
+    handlePostProduct,
+    handleGetProduct,
+    handleDeleteProduct,
+    getProductImage,
+    handleEditProduct
 };

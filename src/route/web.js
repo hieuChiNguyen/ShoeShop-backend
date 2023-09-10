@@ -50,7 +50,7 @@ let initWebRouters = (app) => {
     // Carts
     router.post('/api/create_new_cart_item', cartController.handleCreateNewCartItem);
     router.get('/api/get_cart/:userId', cartController.handleGetCartByUserId);
-    router.put('/api/update_cart', cartController.handleUpdateCart);
+    router.put('/api/update_cart_quantity', cartController.handleUpdateCartQuantity);
     router.delete('/api/delete_cart', cartController.handleDeleteCartProduct);
 
     return app.use('/', router);
