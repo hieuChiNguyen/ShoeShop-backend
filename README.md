@@ -1,2 +1,3 @@
 #### Run back-end: npm start
-#### [localhost](http://localhost:3000/)http://localhost:3000/
+#### http://localhost:8080/
+#### Database: PHP Admin (XAMPP)
