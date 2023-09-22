@@ -1,7 +1,9 @@
+import Product from '../models/Product';
 import User from '../models/User';
 import bcrypt from 'bcryptjs';
 
 const salt = bcrypt.genSaltSync(10);
+const { Op } = require('sequelize');
 
 let hashUserPassword = (password) => {
     return new Promise(async (resolve, reject) => {
@@ -252,6 +254,42 @@ let getUserAvatar = (userId) => {
     });
 };
 
+let search = (searchWord) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await Product.findAll({
+                where: {
+                    [Op.or]: {
+                        productName: {
+                            [Op.startsWith]: [`${searchWord}`]
+                        },
+                        category: {
+                            [Op.startsWith]: [`${searchWord}`]
+                        },
+                        price: {
+                            [Op.startsWith]: [`${searchWord}`]
+                        }
+                    }
+                }
+            });
+            if (data.length != 0) {
+                resolve({
+                    errCode: 0,
+                    message: 'Search successfully !',
+                    data: data
+                });
+            } else {
+                resolve({
+                    errCode: 2,
+                    message: 'Can not find products !'
+                });
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 module.exports = {
     createNewUserByAdmin,
     getAllUsers,
@@ -259,5 +297,6 @@ module.exports = {
     deleteUser,
     editUserData,
     updateUserAvatar,
-    getUserAvatar
+    getUserAvatar,
+    search
 };

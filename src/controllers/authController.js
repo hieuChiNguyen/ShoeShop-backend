@@ -19,13 +19,14 @@ let generateRefreshToken = (user) => {
 // Create a new customer
 let handleSignUp = async (req, res) => {
     try {
+        console.log('check req.body sign up: ', req.body);
         await User.sync();
         let user = req.body;
         let customer = await authService.createNewCustomer(user);
-
+        console.log('check customer: ', customer);
         if (customer.errCode === 0) {
             return res.status(201).json(customer);
-        } else if (customer.errCode === 2 || customer.errCode === 3) {
+        } else if (customer.errCode === 2 || customer.errCode === 3 || customer.errCode === 4) {
             return res.status(400).json(customer);
         }
     } catch (error) {

@@ -20,20 +20,19 @@ const authJWT = {
     // Verify Access token
     verifyToken: async (req, res, next) => {
         if (verifyTokenPaths.includes(req.path)) {
-            console.log('check headers: ', req.headers);
             const tokenBearer = await req.headers.authorization;
             console.log('check bearer token: ', tokenBearer);
             if (tokenBearer && tokenBearer.split(' ')[0] === 'Bearer') {
                 const accessToken = tokenBearer.split(' ')[1];
-                jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, (err, user) => {
-                    if (err) {
-                        return res.status(403).json({
-                            message: 'Token is not valid !'
-                        });
-                    }
+                try {
+                    const user = jwt.verify(accessToken, process.env.JWT_ACCESS_KEY);
                     req.user = user;
                     next();
-                });
+                } catch (error) {
+                    return res.status(403).json({
+                        message: 'Token is not valid !'
+                    });
+                }
             } else {
                 return res.status(401).json({
                     message: 'You are not authenticated !'

@@ -76,6 +76,24 @@ let handleGetUserAvatar = async (req, res) => {
     }
 };
 
+let handleSearch = async (req, res) => {
+    try {
+        let searchWord = req.params.key;
+        console.log('check word: ', searchWord);
+        let search = await userService.search(searchWord);
+        if (search.errCode === 2) {
+            return res.status(404).json(search);
+        }
+        console.log('check result:', search);
+        return res.status(200).json(search);
+    } catch (error) {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Products not found !'
+        });
+    }
+};
+
 module.exports = {
     handleCreateNewUser,
     handleGetAllUsers,
@@ -83,5 +101,6 @@ module.exports = {
     handleEditUser,
     handleDeleteUser,
     handleUpdateUserAvatar,
-    handleGetUserAvatar
+    handleGetUserAvatar,
+    handleSearch
 };

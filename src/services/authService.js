@@ -67,7 +67,7 @@ let generateAccessToken = (user) => {
             role: user.role
         },
         process.env.JWT_ACCESS_KEY,
-        { expiresIn: '60s' }
+        { expiresIn: '1h' }
     );
 };
 
@@ -121,6 +121,13 @@ let handleUserSignIn = (email, password) => {
 let createNewCustomer = (userData) => {
     return new Promise(async (resolve, reject) => {
         try {
+            if (!userData.email || !userData.username || !userData.password || !userData.phone) {
+                resolve({
+                    errCode: 2,
+                    message: 'Please fill out all fields in above form !'
+                });
+            }
+
             // check user was already existed
             let checkExist = await checkExistInformation(userData);
             const phoneNumberRegex = /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
@@ -128,13 +135,13 @@ let createNewCustomer = (userData) => {
 
             if (checkExist === true) {
                 resolve({
-                    errCode: 2,
+                    errCode: 3,
                     message: 'This user was already existed ! Try another email or username or phone !'
                 });
             } else {
                 if (isValidPhoneNumber === false) {
                     resolve({
-                        errCode: 3,
+                        errCode: 4,
                         message: 'This number phone is illegal !'
                     });
                 } else {

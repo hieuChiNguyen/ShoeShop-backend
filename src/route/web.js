@@ -39,6 +39,7 @@ let initWebRouters = (app) => {
     router.delete('/api/delete_user', userController.handleDeleteUser);
     router.put('/api/update_avatar', userController.handleUpdateUserAvatar);
     router.get('/api/get_avatar/:id', userController.handleGetUserAvatar);
+    router.get('/api/search/:key', userController.handleSearch);
 
     // Products
     router.get('/resources/uploads/:pathImage', productController.getProductImage);
